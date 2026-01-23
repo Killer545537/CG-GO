@@ -26,16 +26,16 @@ export function TargetTable({ targets }: TargetTableProps) {
 
     return (
         <div className='overflow-x-auto'>
-            <table className='w-full text-left text-sm'>
+            <table className='w-full text-left'>
                 <thead>
                     <tr className='border-b border-neutral-800'>
-                        <th className='h-12 px-4 font-medium text-neutral-400'>
+                        <th className='h-14 px-6 font-medium text-neutral-400 text-base'>
                             Target CGPA
                         </th>
-                        <th className='h-12 px-4 font-medium text-neutral-400'>
+                        <th className='h-14 px-6 font-medium text-neutral-400 text-base'>
                             Required SGPA
                         </th>
-                        <th className='h-12 px-4 font-medium text-neutral-400'>
+                        <th className='h-14 px-6 font-medium text-neutral-400 text-base'>
                             Status
                         </th>
                     </tr>
@@ -46,18 +46,18 @@ export function TargetTable({ targets }: TargetTableProps) {
                             key={row.target}
                             className='hover:bg-neutral-900/50 transition-colors'
                         >
-                            <td className='p-4 font-medium text-neutral-50 text-base'>
+                            <td className='p-6 font-medium text-neutral-50 text-lg'>
                                 {row.target.toFixed(2)}
                             </td>
-                            <td className='p-4 text-neutral-300 font-mono'>
+                            <td className='p-6 text-neutral-300 font-mono text-lg'>
                                 {row.status === 'impossible'
                                     ? '> 10.00'
                                     : row.required.toFixed(2)}
                             </td>
-                            <td className='p-4'>
+                            <td className='p-6'>
                                 <Badge
                                     variant='outline'
-                                    className={getStatusColor(row.status)}
+                                    className={`text-sm px-3 py-1 ${getStatusColor(row.status)}`}
                                 >
                                     {row.status.charAt(0).toUpperCase() +
                                         row.status.slice(1)}

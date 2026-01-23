@@ -1,37 +1,11 @@
 import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import type { Semester } from '@/types';
-
-// Define minimal types needed for props without using 'any'
-interface FieldState<T> {
-    value: T;
-    meta: {
-        errors?: string[];
-    };
-}
-
-interface FieldInstance<T = unknown> {
-    name: string;
-    state: FieldState<T>;
-    handleChange: (value: T) => void;
-    handleBlur: () => void;
-    removeValue?: (index: number) => void;
-}
-
-interface FormInstance {
-    Field: React.ComponentType<{
-        name: string;
-        validators?: {
-            onChange?: (ctx: { value: string }) => string | undefined;
-        };
-        children: (field: FieldInstance<string>) => React.ReactNode;
-    }>;
-}
+import type { FormApi, SemesterArrayFieldApi } from '@/types';
 
 interface CourseRowProps {
-    field: FieldInstance<Semester[]>;
-    form: FormInstance;
+    field: SemesterArrayFieldApi;
+    form: FormApi;
     index: number;
     canRemove: boolean;
 }
@@ -50,7 +24,7 @@ export function CourseRow({ field, form, index, canRemove }: CourseRowProps) {
                     },
                 }}
             >
-                {(subField: FieldInstance<string>) => (
+                {(subField) => (
                     <div className='w-[40%] space-y-1'>
                         <Input
                             placeholder='20'
@@ -59,7 +33,7 @@ export function CourseRow({ field, form, index, canRemove }: CourseRowProps) {
                                 subField.handleChange(e.target.value)
                             }
                             onBlur={subField.handleBlur}
-                            className='bg-neutral-900 border-neutral-800 focus:ring-neutral-50 h-11'
+                            className='bg-neutral-900 border-neutral-800 focus:ring-neutral-50 h-14 text-lg'
                             type='number'
                         />
                         {subField.state.meta.errors ? (
@@ -86,7 +60,7 @@ export function CourseRow({ field, form, index, canRemove }: CourseRowProps) {
                     },
                 }}
             >
-                {(subField: FieldInstance<string>) => (
+                {(subField) => (
                     <div className='w-[40%] space-y-1'>
                         <Input
                             placeholder='8.5'
@@ -95,7 +69,7 @@ export function CourseRow({ field, form, index, canRemove }: CourseRowProps) {
                                 subField.handleChange(e.target.value)
                             }
                             onBlur={subField.handleBlur}
-                            className='bg-neutral-900 border-neutral-800 focus:ring-neutral-50 h-11'
+                            className='bg-neutral-900 border-neutral-800 focus:ring-neutral-50 h-14 text-lg'
                             type='number'
                             step='0.01'
                         />
@@ -115,7 +89,7 @@ export function CourseRow({ field, form, index, canRemove }: CourseRowProps) {
                 type='button'
                 variant='ghost'
                 size='icon'
-                className='text-neutral-500 hover:text-red-400 hover:bg-neutral-900/50 mt-1'
+                className='text-neutral-500 hover:text-red-400 hover:bg-neutral-900/50 mt-2 h-10 w-10'
                 onClick={() => {
                     if (field.removeValue) {
                         field.removeValue(index);
@@ -123,7 +97,7 @@ export function CourseRow({ field, form, index, canRemove }: CourseRowProps) {
                 }}
                 disabled={!canRemove && field.name.includes('semesters')}
             >
-                <Trash2 className='w-4 h-4' />
+                <Trash2 className='w-5 h-5' />
             </Button>
         </div>
     );

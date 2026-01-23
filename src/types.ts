@@ -1,3 +1,4 @@
+import type { FieldApi, ReactFormApi } from '@tanstack/react-form';
 import { type } from 'arktype';
 
 // Define the semester schema
@@ -16,3 +17,69 @@ export const calculatorSchema = type({
 // Infer types from schemas
 export type Semester = typeof semesterSchema.infer;
 export type CalculatorState = typeof calculatorSchema.infer;
+
+// Form type aliases to avoid repetitive generic declarations
+export type StringFieldApi = FieldApi<
+    any,
+    any,
+    string,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any
+>;
+export type SemesterArrayFieldApi = FieldApi<
+    any,
+    any,
+    Semester[],
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any
+>;
+export type FormApi = ReactFormApi<
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any
+>;

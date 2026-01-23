@@ -29,9 +29,6 @@ export function CalculatorForm() {
         onSubmit: async ({ value }) => {
             setIsCalculating(true);
 
-            // Simulate delay
-            await new Promise((resolve) => setTimeout(resolve, 300));
-
             // Extract credits and CGPAs from input
             const completedCredits = value.semesters.map(
                 (s) => parseFloat(s.credits) || 0,
@@ -57,41 +54,50 @@ export function CalculatorForm() {
                 droppedCGPAs,
             );
 
-            const targetResults = findTargetCGPAs(
-                completedCredits,
-                completedCGPAs,
-                droppedCredits,
-                droppedCGPAs,
-                currentSemCredits,
-            );
-
-            // Map to UI format
-            const targets = targetResults
-                .filter((t) => t.targetCGPA >= currentCGPA) // Only show future targets
-                .map((t) => {
-                    let status: 'achievable' | 'difficult' | 'impossible' =
-                        'achievable';
-
-                    if (t.requiredSemesterCGPA === 'Not Possible') {
-                        status = 'impossible';
-                    } else if (t.requiredSemesterCGPA > 9.0) {
-                        status = 'difficult';
-                    }
-
-                    return {
-                        target: t.targetCGPA,
-                        required:
-                            t.requiredSemesterCGPA === 'Not Possible'
-                                ? 10.01
-                                : t.requiredSemesterCGPA,
-                        status,
-                    };
-                });
-
             // Calculate effective completed credits (completed - dropped)
             const totalCompleted = completedCredits.reduce((a, b) => a + b, 0);
             const totalDropped = droppedCredits.reduce((a, b) => a + b, 0);
             const effectiveCredits = totalCompleted - totalDropped;
+
+            // Only calculate targets if current semester credits are provided
+            let targets: {
+                target: number;
+                required: number;
+                status: 'achievable' | 'difficult' | 'impossible';
+            }[] = [];
+
+            if (currentSemCredits > 0) {
+                const targetResults = findTargetCGPAs(
+                    completedCredits,
+                    completedCGPAs,
+                    droppedCredits,
+                    droppedCGPAs,
+                    currentSemCredits,
+                );
+
+                // Map to UI format
+                targets = targetResults
+                    .filter((t) => t.targetCGPA >= currentCGPA) // Only show future targets
+                    .map((t) => {
+                        let status: 'achievable' | 'difficult' | 'impossible' =
+                            'achievable';
+
+                        if (t.requiredSemesterCGPA === 'Not Possible') {
+                            status = 'impossible';
+                        } else if (t.requiredSemesterCGPA > 9.0) {
+                            status = 'difficult';
+                        }
+
+                        return {
+                            target: t.targetCGPA,
+                            required:
+                                t.requiredSemesterCGPA === 'Not Possible'
+                                    ? 10.01
+                                    : t.requiredSemesterCGPA,
+                            status,
+                        };
+                    });
+            }
 
             setResultData({
                 currentCGPA,
@@ -110,92 +116,101 @@ export function CalculatorForm() {
     });
 
     return (
-        <div className='max-w-2xl mx-auto px-4 py-12 md:px-0 space-y-12'>
-            {/* Header */}
-            <header className='text-center md:text-left'>
-                <h1 className='text-3xl font-bold text-neutral-50'>
-                    CGPA Calculator
-                </h1>
-                <p className='text-neutral-400 mt-2'>
-                    Calculate your current standing and see what grades you need
-                    to hit your targets.
-                </p>
-            </header>
+        <div className='max-w-6xl mx-auto px-4 py-12 md:px-6'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-start'>
+                <div className='space-y-12'>
+                    {/* Header */}
+                    <header className='text-center md:text-left'>
+                        <h1 className='text-4xl font-bold text-neutral-50'>
+                            CGPA Calculator
+                        </h1>
+                        <p className='text-neutral-400 mt-2 text-lg'>
+                            Calculate your current standing and see what grades
+                            you need to hit your targets.
+                        </p>
+                    </header>
 
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    form.handleSubmit();
-                }}
-                className='space-y-12'
-            >
-                {/* Previous Semesters */}
-                <form.Field name='semesters' mode='array'>
-                    {(field) => (
-                        <SemesterList
-                            field={field}
-                            form={form}
-                            label='Previous Semesters'
-                            helperText=''
-                            showLabels={true}
-                        />
-                    )}
-                </form.Field>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            form.handleSubmit();
+                        }}
+                        className='space-y-12'
+                    >
+                        {/* Previous Semesters */}
+                        <form.Field name='semesters' mode='array'>
+                            {(field) => (
+                                <SemesterList
+                                    field={field}
+                                    form={form}
+                                    label='Previous Semesters'
+                                    helperText=''
+                                    showLabels={true}
+                                />
+                            )}
+                        </form.Field>
 
-                {/* Dropped Courses */}
-                <form.Field name='dropped' mode='array'>
-                    {(field) => (
-                        <div className='bg-neutral-900/50 rounded-lg p-6 border border-neutral-800'>
-                            <h3 className='text-sm font-medium text-neutral-400 mb-4'>
-                                Dropped / Backlog Courses
-                            </h3>
-                            <SemesterList
-                                field={field}
-                                form={form}
-                                label=''
-                                helperText='Add courses here only if they are not included in your semester results but still impact your credit calculation.'
-                                showLabels={false}
-                                defaultEmpty={true}
-                            />
+                        {/* Dropped Courses */}
+                        <form.Field name='dropped' mode='array'>
+                            {(field) => (
+                                <div className='bg-neutral-900/50 rounded-lg p-6 border border-neutral-800'>
+                                    <h3 className='text-sm font-medium text-neutral-400 mb-4'>
+                                        Dropped / Backlog Courses
+                                    </h3>
+                                    <SemesterList
+                                        field={field}
+                                        form={form}
+                                        label=''
+                                        helperText='Add courses here only if they are not included in your semester results but still impact your credit calculation.'
+                                        showLabels={false}
+                                        defaultEmpty={true}
+                                    />
+                                </div>
+                            )}
+                        </form.Field>
+
+                        {/* Current Semester Credits */}
+                        <form.Field name='currentCredits'>
+                            {(field) => <CurrentCredits field={field} />}
+                        </form.Field>
+
+                        {/* Action */}
+                        <form.Subscribe
+                            selector={(state) => [
+                                state.canSubmit,
+                                state.isSubmitting,
+                            ]}
+                        >
+                            {([canSubmit]) => (
+                                <Button
+                                    type='submit'
+                                    size='lg'
+                                    className='w-full h-12 text-base font-semibold'
+                                    disabled={!canSubmit || isCalculating}
+                                >
+                                    {isCalculating ? (
+                                        <span className='flex items-center gap-2'>
+                                            Calculating...
+                                        </span>
+                                    ) : (
+                                        'Calculate Results'
+                                    )}
+                                </Button>
+                            )}
+                        </form.Subscribe>
+                    </form>
+                </div>
+
+                {/* Results */}
+                <div className='lg:sticky lg:top-8'>
+                    {resultData && (
+                        <div id='results-section'>
+                            <ResultsView data={resultData} />
                         </div>
                     )}
-                </form.Field>
-
-                {/* Current Semester Credits */}
-                <form.Field name='currentCredits'>
-                    {(field) => <CurrentCredits field={field} />}
-                </form.Field>
-
-                {/* Action */}
-                <form.Subscribe
-                    selector={(state) => [state.canSubmit, state.isSubmitting]}
-                >
-                    {([canSubmit]) => (
-                        <Button
-                            type='submit'
-                            size='lg'
-                            className='w-full h-12 text-base font-semibold'
-                            disabled={!canSubmit || isCalculating}
-                        >
-                            {isCalculating ? (
-                                <span className='flex items-center gap-2'>
-                                    Calculating...
-                                </span>
-                            ) : (
-                                'Calculate Results'
-                            )}
-                        </Button>
-                    )}
-                </form.Subscribe>
-            </form>
-
-            {/* Results */}
-            {resultData && (
-                <div id='results-section'>
-                    <ResultsView data={resultData} />
                 </div>
-            )}
+            </div>
         </div>
     );
 }

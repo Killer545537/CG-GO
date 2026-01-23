@@ -21,14 +21,16 @@ export function ResultsView({ data }: ResultsViewProps) {
                 credits={data.completedCredits}
             />
 
-            <div className='space-y-4'>
-                <h3 className='text-lg font-semibold text-neutral-50 px-1'>
-                    Target Scenarios
-                </h3>
-                <div className='border border-neutral-800 rounded-lg overflow-hidden bg-neutral-900/20'>
-                    <TargetTable targets={data.targetTable} />
+            {data.targetTable.length > 0 && (
+                <div className='space-y-4'>
+                    <h3 className='text-xl font-semibold text-neutral-50 px-1'>
+                        Target Scenarios
+                    </h3>
+                    <div className='border border-neutral-800 rounded-lg overflow-hidden bg-neutral-900/20'>
+                        <TargetTable targets={data.targetTable} />
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

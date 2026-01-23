@@ -1,39 +1,11 @@
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import type { Semester } from '@/types';
+import type { FormApi, Semester, SemesterArrayFieldApi } from '@/types';
 import { CourseRow } from './course-row';
 
-// Define minimal types needed for props without using 'any'
-interface FieldState<T> {
-    value: T;
-    meta: {
-        errors?: string[];
-    };
-}
-
-interface FieldInstance<T = unknown> {
-    name: string;
-    state: FieldState<T>;
-    handleChange: (value: T) => void;
-    handleBlur: () => void;
-    pushValue: T extends (infer U)[] ? (value: U) => void : never;
-    removeValue: T extends (infer _U)[] ? (index: number) => void : never;
-}
-
-interface FormInstance {
-    Field: React.ComponentType<{
-        name: string;
-        validators?: {
-            onChange?: (ctx: { value: unknown }) => string | undefined;
-        };
-        children: (field: FieldInstance) => React.ReactNode;
-    }>;
-    handleSubmit: () => void;
-}
-
 interface SemesterListProps {
-    field: FieldInstance<Semester[]>;
-    form: FormInstance;
+    field: SemesterArrayFieldApi;
+    form: FormApi;
     label: string;
     helperText?: string;
     showLabels?: boolean;
@@ -54,10 +26,10 @@ export function SemesterList({
                     {/* Header Labels for Desktop */}
                     {showLabels && field.state.value.length > 0 && (
                         <div className='hidden md:flex w-full gap-4 pr-12'>
-                            <span className='w-[40%] text-sm font-medium text-neutral-400'>
+                            <span className='w-[40%] text-base font-medium text-neutral-400'>
                                 Credits
                             </span>
-                            <span className='w-[40%] text-sm font-medium text-neutral-400'>
+                            <span className='w-[40%] text-base font-medium text-neutral-400'>
                                 SGPA
                             </span>
                         </div>
@@ -84,10 +56,10 @@ export function SemesterList({
             <Button
                 variant='ghost'
                 type='button'
-                className='w-full border border-dashed border-neutral-700 text-neutral-400 hover:text-neutral-50 hover:bg-neutral-800 hover:border-neutral-600 h-10 mt-2'
+                className='w-full border border-dashed border-neutral-700 text-neutral-400 hover:text-neutral-50 hover:bg-neutral-800 hover:border-neutral-600 h-12 text-base mt-2'
                 onClick={() => field.pushValue({ credits: '', sgpa: '' })}
             >
-                <Plus className='w-4 h-4 mr-2' />
+                <Plus className='w-5 h-5 mr-2' />
                 Add Semester
             </Button>
         </div>
