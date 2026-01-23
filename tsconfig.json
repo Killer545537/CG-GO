@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "ES2024"],
+
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true, // Enable all strict type-checking options
+    "noEmit": true, // Do not emit compiled output (type checking only)
+    "esModuleInterop": true, // Smooth interop between CommonJS and ES modules
+
+    /* Additional strictness checks requested */
+    "noUncheckedIndexedAccess": true, // Make index access return possibly-undefined (safer)
+    "exactOptionalPropertyTypes": true, // Distinguish between T | undefined and optional props
+
+    /* Style options (commented out by default - enable as desired) */
+    "noImplicitReturns": true, // Ensure all code paths return a value
+    "noImplicitOverride": true, // Require explicit 'override' keyword for overrides
+    "noUnusedLocals": true, // Report unused local variables
+    "noUnusedParameters": true, // Report unused function parameters
+    "noFallthroughCasesInSwitch": true, // Report fallthrough between switch cases
+    "noPropertyAccessFromIndexSignature": false, // Allow property access from index signature
+
+    "module": "esnext",
+    "moduleResolution": "bundler", // Use bundler-style resolution (Next.js / modern bundlers)
+    "moduleDetection": "force",
+    "resolveJsonModule": true, // Allow importing .json files as modules
+
+    "isolatedModules": true,
+    "incremental": true,
+
+    "jsx": "react-jsx",
+
+    "plugins": [
+      {
+        "name": "next",
+      },
+    ],
+
+    "paths": {
+      "@/*": ["./src/*"],
+    },
+  },
+
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts",
+  ],
+
+  "exclude": ["node_modules"],
+}
