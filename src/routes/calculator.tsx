@@ -4,9 +4,8 @@ export const Route = createFileRoute('/calculator')({
     component: RouteComponent,
 });
 
-import { CalculatorForm } from '@/components/calculator/calculator-form';
-
 import { motion } from 'framer-motion';
+import { CalculatorForm } from '@/components/calculator/calculator-form';
 
 function RouteComponent() {
     return (

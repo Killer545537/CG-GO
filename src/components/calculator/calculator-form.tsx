@@ -1,6 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { calculateCurrentCGPA, findTargetCGPAs } from '@/lib/calculator-utils';
 import type { CalculatorState } from '@/types';
 import { CurrentCredits } from './current-credits';
@@ -204,9 +205,43 @@ export function CalculatorForm() {
 
                 {/* Results */}
                 <div className='lg:sticky lg:top-8'>
-                    {resultData && (
+                    {resultData ? (
                         <div id='results-section'>
                             <ResultsView data={resultData} />
+                        </div>
+                    ) : (
+                        <div className='space-y-8 opacity-50 select-none pointer-events-none grayscale'>
+                            {/* Summary Card Skeleton */}
+                            <div className='bg-neutral-900 border border-neutral-800 rounded-xl p-8 mb-8 text-center md:text-left shadow-lg'>
+                                <Skeleton className='h-4 w-32 bg-neutral-800 mb-4' />
+                                <Skeleton className='h-16 w-48 bg-neutral-800 mb-4' />
+                                <div className='flex items-center gap-2'>
+                                    <Skeleton className='h-4 w-16 bg-neutral-800' />
+                                    <Skeleton className='h-4 w-8 bg-neutral-800' />
+                                    <Skeleton className='h-4 w-32 bg-neutral-800' />
+                                </div>
+                            </div>
+
+                            {/* Target Scenarios Skeleton */}
+                            <div className='space-y-4'>
+                                <Skeleton className='h-6 w-40 bg-neutral-800' />
+                                <div className='border border-neutral-800 rounded-lg overflow-hidden bg-neutral-900/20'>
+                                    <div className='p-6 border-b border-neutral-800 flex gap-4'>
+                                        <Skeleton className='h-4 w-1/3 bg-neutral-800' />
+                                        <Skeleton className='h-4 w-1/3 bg-neutral-800' />
+                                        <Skeleton className='h-4 w-1/3 bg-neutral-800' />
+                                    </div>
+                                    <div className='p-6 flex gap-4'>
+                                        <Skeleton className='h-4 w-full bg-neutral-800' />
+                                    </div>
+                                    <div className='p-6 flex gap-4'>
+                                        <Skeleton className='h-4 w-full bg-neutral-800' />
+                                    </div>
+                                    <div className='p-6 flex gap-4'>
+                                        <Skeleton className='h-4 w-full bg-neutral-800' />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
